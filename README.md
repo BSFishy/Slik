@@ -17,7 +17,7 @@ Slik is setup with Bintray, so it is easier than ever to get official and beta r
     }
     
     dependencies {
-        compile: "slik:slik:X.X.X"
+        compile 'com.lousylynx:slik:X.X.X-X'
     }
 
 ## Building
