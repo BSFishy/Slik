@@ -1,7 +1,6 @@
 package com.lousylynx.slik.common.types;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
-import lombok.Data;
 import lombok.Getter;
 
 public enum Status {
@@ -16,8 +15,7 @@ public enum Status {
     PAYMENT_REQUIRED(402),
     FORBIDDEN(403),
     NOT_FOUND(404),
-    BAD_GATEWAY(502)
-    ;
+    BAD_GATEWAY(502);
 
     @Getter
     private final String name;

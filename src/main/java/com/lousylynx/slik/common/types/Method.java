@@ -13,8 +13,7 @@ public enum Method {
     DELETE("DELETE"),
     TRACE("TRACE"),
     CONNECT("CONNECT"),
-    ANY("ANY")
-    ;
+    ANY("ANY");
 
     @Getter
     final HttpMethod literal;
@@ -27,8 +26,8 @@ public enum Method {
     }
 
     public static Method valueOf(HttpMethod method) {
-        for(Method m : values()) {
-            if(m.getName().equals(method.name())) {
+        for (Method m : values()) {
+            if (m.getName().equals(method.name())) {
                 return m;
             }
         }

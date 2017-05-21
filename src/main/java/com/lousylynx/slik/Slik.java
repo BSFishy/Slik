@@ -16,6 +16,10 @@ import lombok.Getter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
+
+import java.io.InputStream;
 
 public class Slik {
 
@@ -28,8 +32,9 @@ public class Slik {
      * The event bus for the Slik environment
      */
     public static final EventBus EVENT_BUS = new EventBus();
-
-    public static final Logger LOG = LogManager.getLogger("Slik");
+    @Getter
+    private static Logger LOG;
+    public static final String assetsFolder = "assets/slik/";
 
     /**
      * Initialize the Slik environment. This will setup all of the essential components needed for Slik to run, as well as allow you to add your own custom variables
@@ -40,33 +45,33 @@ public class Slik {
 
     /**
      * Initialize the Slik environment. This will setup all of the essential components needed for Slik to run, as well as allow you to add your own custom variables
+     *
      * @param environment the environment to initialize with
      */
     public static void init(Environment environment) {
         env = environment;
 
         setupShutdownHook();
+        setupLogger();
 
-        if(env.isDebugMessages())
+        if (env.isDebugMessages())
             LOG.info("Slik has been initialized");
     }
 
-    public static void start() {
-        final ServerBootstrap bootstrap = new ServerBootstrap()
-                .group(env.getMasterGroup(), env.getSlaveGroup())
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new SlikChannelInitializer())
-                .option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
-
-        if(env.isDebugMessages())
-            LOG.info("Slik is being started");
-
+    private static void setupLogger() {
         try {
-            env.setChannel(bootstrap.bind(env.getIp(), env.getPort()).sync());
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream is = classLoader.getResourceAsStream(assetsFolder + "log4j2.xml");
+
+            ConfigurationSource source = new ConfigurationSource(is);
+            Configurator.initialize(null, source);
+
+            LOG = LogManager.getLogger("Slik");
         } catch (Exception e) {
-            LOG.warn("There was an error starting the webserver.");
-            LOG.log(Level.WARN, e.getMessage(), e.getCause());
+            LOG = LogManager.getLogger();
+            //System.out.println("Failed to initialize the logger");
+            LOG.error("Failed to initialize the logger");
+            LOG.log(Level.ERROR, e.getMessage(), e);
         }
     }
 
@@ -78,6 +83,25 @@ public class Slik {
         }));
     }
 
+    public static void start() {
+        final ServerBootstrap bootstrap = new ServerBootstrap()
+                .group(env.getMasterGroup(), env.getSlaveGroup())
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new SlikChannelInitializer())
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
+
+        if (env.isDebugMessages())
+            LOG.info("Slik is being started");
+
+        try {
+            env.setChannel(bootstrap.bind(env.getIp(), env.getPort()).sync());
+        } catch (Exception e) {
+            LOG.warn("There was an error starting the webserver.");
+            LOG.log(Level.WARN, e.getMessage(), e.getCause());
+        }
+    }
+
     /**
      * Shut down the server with this method. Everything will be gracefully shut down
      */
@@ -87,9 +111,10 @@ public class Slik {
 
         try {
             env.getChannel().channel().closeFuture().sync();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
 
-        if(env.isDebugMessages())
+        if (env.isDebugMessages())
             LOG.info("Slik has been successfully shut down");
     }
 
@@ -130,6 +155,7 @@ public class Slik {
 
         /**
          * Sets a new value for the IP to run on
+         *
          * @param ip the new IP to set
          * @return the current EnvironmentBuilder instance
          */
@@ -140,6 +166,7 @@ public class Slik {
 
         /**
          * Sets a new value for the port
+         *
          * @param port the new port value
          * @return the current EnvironmentBuilder instance
          */
@@ -160,6 +187,7 @@ public class Slik {
 
         /**
          * Build the builder to make an {@link Environment}
+         *
          * @return the built {@link Environment}
          */
         public Environment build() {

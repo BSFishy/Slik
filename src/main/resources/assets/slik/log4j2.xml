@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="SlikAppender" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%logger{36}][%level] %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
-        <!--<Logger name="Slik">-->
-            <!--<AppenderRef ref="Console"/>-->
-        <!--</Logger>-->
+        <Logger name="Slik">
+            <AppenderRef ref="SlikAppender"/>
+        </Logger>
         <Root level="INFO">
-            <AppenderRef ref="Console"/>
+            <!--<AppenderRef ref="Console"/>-->
         </Root>
     </Loggers>
 </Configuration>

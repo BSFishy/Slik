@@ -19,7 +19,7 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
 
         final FullHttpRequest request = (FullHttpRequest) msg;
 
-        if(HttpUtil.is100ContinueExpected(request)) {
+        if (HttpUtil.is100ContinueExpected(request)) {
             send100Continue(context);
         }
 
@@ -28,16 +28,16 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
 
         Route r = Slik.getRouter().getRoute(req.getPath());
 
-        if(r != null) {
-            if(Slik.getEnv().isIncomingMessages())
-                Slik.LOG.info("Received and handled message: " + request.uri());
+        if (r != null) {
+            if (Slik.getEnv().isIncomingMessages())
+                Slik.getLOG().info("Received and handled message: " + request.uri());
 
             Response newRes = r.getCall().handle(req, res);
 
             context.write(newRes.compile());
         } else {
-            if(Slik.getEnv().isIncomingMessages())
-                Slik.LOG.info("Received a 404 message: " + request.uri());
+            if (Slik.getEnv().isIncomingMessages())
+                Slik.getLOG().info("Received a 404 message: " + request.uri());
 
             send404NotFound(context);
         }

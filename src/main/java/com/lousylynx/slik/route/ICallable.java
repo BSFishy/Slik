@@ -5,7 +5,7 @@ import com.lousylynx.slik.common.Response;
 
 public interface ICallable {
 
-    default Response handle(Request request, Response response){
+    default Response handle(Request request, Response response) {
         return response;
     }
 }

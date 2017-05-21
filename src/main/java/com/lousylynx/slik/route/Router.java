@@ -14,8 +14,8 @@ public class Router {
         Route r = new Route(path, method, call);
         routes.add(r);
 
-        if(Slik.getEnv().isDebugMessages())
-            Slik.LOG.info("Route \"" + method.getName() + "\" for path has been added: " + path);
+        if (Slik.getEnv().isDebugMessages())
+            Slik.getLOG().info("Route \"" + method.getName() + "\" for path has been added: " + path);
 
         return r;
     }
@@ -23,8 +23,8 @@ public class Router {
     public List<Route> getRoutes(Method method) {
         List<Route> result = new ArrayList<>();
 
-        for(Route r : routes) {
-            if(r.getMethod().equals(method)) {
+        for (Route r : routes) {
+            if (r.getMethod().equals(method)) {
                 result.add(r);
             }
         }
@@ -33,8 +33,8 @@ public class Router {
     }
 
     public Route getRoute(String path) {
-        for(Route r : routes) {
-            if(r.getPath().equals(path)) {
+        for (Route r : routes) {
+            if (r.pathMatches(path)) {
                 return r;
             }
         }
@@ -43,8 +43,8 @@ public class Router {
     }
 
     public Route getRouteByName(String name) {
-        for(Route r : routes) {
-            if(r.getName().equals(name)) {
+        for (Route r : routes) {
+            if (r.getName().equals(name)) {
                 return r;
             }
         }

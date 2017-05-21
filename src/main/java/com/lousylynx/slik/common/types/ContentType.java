@@ -11,8 +11,7 @@ public enum ContentType {
 
     GIF("image/gif"),
     PNG("image/png"),
-    JPEG("image/jpeg")
-    ;
+    JPEG("image/jpeg");
 
     @Getter
     private String literal;

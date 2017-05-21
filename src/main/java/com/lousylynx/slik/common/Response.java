@@ -3,7 +3,10 @@ package com.lousylynx.slik.common;
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.common.types.Status;
 import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpVersion;
 import lombok.Data;
 import lombok.Setter;
 

@@ -5,6 +5,7 @@ import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.route.ICallable;
+import com.lousylynx.slik.route.parser.UrlParser;
 
 public class BasicTest {
 
@@ -14,7 +15,7 @@ public class BasicTest {
                 .setPort(8070)
                 .build());
 
-        Slik.any("/", new ICallable() {
+        Slik.any("/{test}(/{test})", new ICallable() {
             @Override
             public Response handle(Request request, Response response) {
                 response.setType(ContentType.HTML);
@@ -23,14 +24,14 @@ public class BasicTest {
             }
         }).setName("home");
 
-        Slik.any("/test", new ICallable() {
-            @Override
-            public Response handle(Request request, Response response) {
-                response.setType(ContentType.HTML);
-                response.append("This is another test. Click <a href=\"" + Slik.pathFor("test-2") + "\">here</a>.");
-                return response;
-            }
-        }).setName("test");
+//        Slik.any("/test", new ICallable() {
+//            @Override
+//            public Response handle(Request request, Response response) {
+//                response.setType(ContentType.HTML);
+//                response.append("This is another test. Click <a href=\"" + Slik.pathFor("test-2") + "\">here</a>.");
+//                return response;
+//            }
+//        }).setName("test");
 
         Slik.any("/test/test", new ICallable() {
             @Override
@@ -39,7 +40,9 @@ public class BasicTest {
                 response.append("This is yet another test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.");
                 return response;
             }
-        }).setName("test-2");
+        }).setName("test");
+
+        Slik.getLOG().info(UrlParser.parse("/download/{file}.{ext}[(/{file}.{ext})]").asRegular());
 
         Slik.start();
     }
