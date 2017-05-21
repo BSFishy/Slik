@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Slik {
 
+    @Getter
     private static Environment env;
     @Getter
     private static Router router = new Router();
@@ -45,6 +46,9 @@ public class Slik {
         env = environment;
 
         setupShutdownHook();
+
+        if(env.isDebugMessages())
+            LOG.info("Slik has been initialized");
     }
 
     public static void start() {
@@ -55,7 +59,8 @@ public class Slik {
                 .option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-        LOG.info("Starting the server");
+        if(env.isDebugMessages())
+            LOG.info("Slik is being started");
 
         try {
             env.setChannel(bootstrap.bind(env.getIp(), env.getPort()).sync());
@@ -83,6 +88,9 @@ public class Slik {
         try {
             env.getChannel().channel().closeFuture().sync();
         } catch (InterruptedException ignored) {}
+
+        if(env.isDebugMessages())
+            LOG.info("Slik has been successfully shut down");
     }
 
     public static Route get(String path, ICallable call) {
@@ -117,6 +125,8 @@ public class Slik {
 
         private String ip = "127.0.0.1";
         private int port = 80;
+        private boolean debugMessages = true;
+        private boolean incomingMessages = true;
 
         /**
          * Sets a new value for the IP to run on
@@ -135,6 +145,16 @@ public class Slik {
          */
         public EnvironmentBuilder setPort(int port) {
             this.port = port;
+            return this;
+        }
+
+        public EnvironmentBuilder setDebugMessages(boolean m) {
+            debugMessages = m;
+            return this;
+        }
+
+        public EnvironmentBuilder setIncomingMessages(boolean m) {
+            incomingMessages = m;
             return this;
         }
 

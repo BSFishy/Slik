@@ -18,11 +18,17 @@ public class Environment {
     private final EventLoopGroup masterGroup;
     private final EventLoopGroup slaveGroup;
 
+    private final boolean debugMessages;
+    private final boolean incomingMessages;
+
     public Environment(EnvironmentBuilder builder) {
         this.ip = builder.getIp();
         this.port = builder.getPort();
 
         this.masterGroup = new NioEventLoopGroup();
         this.slaveGroup = new NioEventLoopGroup();
+
+        this.debugMessages = builder.isDebugMessages();
+        this.incomingMessages = builder.isIncomingMessages();
     }
 }

@@ -14,7 +14,8 @@ public class Router {
         Route r = new Route(path, method, call);
         routes.add(r);
 
-        Slik.LOG.info("Route \"" + method.getName() + "\" for path has been added: " + path);
+        if(Slik.getEnv().isDebugMessages())
+            Slik.LOG.info("Route \"" + method.getName() + "\" for path has been added: " + path);
 
         return r;
     }

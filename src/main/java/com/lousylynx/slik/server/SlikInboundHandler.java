@@ -29,13 +29,15 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
         Route r = Slik.getRouter().getRoute(req.getPath());
 
         if(r != null) {
-            Slik.LOG.info("Received and handled message: " + request.uri());
+            if(Slik.getEnv().isIncomingMessages())
+                Slik.LOG.info("Received and handled message: " + request.uri());
 
             Response newRes = r.getCall().handle(req, res);
 
             context.write(newRes.compile());
         } else {
-            Slik.LOG.info("Received a 404 message: " + request.uri());
+            if(Slik.getEnv().isIncomingMessages())
+                Slik.LOG.info("Received a 404 message: " + request.uri());
 
             send404NotFound(context);
         }
