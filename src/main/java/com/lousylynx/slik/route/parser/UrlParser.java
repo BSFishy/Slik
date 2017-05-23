@@ -11,12 +11,18 @@ public class UrlParser {
     // Rules:
     // { } - Required input - Nothing except normal characters can be inside
     // [ ] - Optional
-    // ( ) - Loop as much as needed
+    // ( ) - Loop as much as needed - NO
+    //  $  - Match all
     //  *  - Anything
     public static Url parse(String url) throws IllegalStateException {
         Component sup = new Url();
         Component currentComponent = null;
         Type currentType = SUPER;
+
+        if(url.startsWith("$")) {
+            sup.getSuperMost().setMatchAll(true);
+            url = url.substring(1);
+        }
 
         for (int i = 0; i < url.length(); i++) {
             char c = url.charAt(i);
@@ -79,32 +85,32 @@ public class UrlParser {
                 url = url.substring(subChar);
                 currentType = Type.valueOf(sup);
                 i = -1;
-            } else if (c == '(') { // A loop block - ( )
-                if (currentType == INPUT) {
-                    throw new IllegalStateException("Tried to put a \"/\" inside of a input block");
-                } else if (currentType == REGULAR) {
-                    sup.addChild(currentComponent);
-                    url = url.substring(subChar);
-                    currentComponent = null;
-                    i = -1;
-                    subChar = i + 1;
-                }
-
-                sup = new LoopComponent(sup);
-                url = url.substring(subChar);
-                currentType = LOOP;
-                i = -1;
-            } else if (c == ')') { // Closing loop block - ( )
-                if(currentType == REGULAR) {
-                    sup.addChild(currentComponent);
-                    currentComponent = null;
-                }
-
-                sup.getSup().addChild(sup);
-                sup = sup.getSup();
-                url = url.substring(subChar);
-                currentType = Type.valueOf(sup);
-                i = -1;
+//            } else if (c == '(') { // A loop block - ( )
+//                if (currentType == INPUT) {
+//                    throw new IllegalStateException("Tried to put a \"/\" inside of a input block");
+//                } else if (currentType == REGULAR) {
+//                    sup.addChild(currentComponent);
+//                    url = url.substring(subChar);
+//                    currentComponent = null;
+//                    i = -1;
+//                    subChar = i + 1;
+//                }
+//
+//                sup = new LoopComponent(sup);
+//                url = url.substring(subChar);
+//                currentType = LOOP;
+//                i = -1;
+//            } else if (c == ')') { // Closing loop block - ( )
+//                if(currentType == REGULAR) {
+//                    sup.addChild(currentComponent);
+//                    currentComponent = null;
+//                }
+//
+//                sup.getSup().addChild(sup);
+//                sup = sup.getSup();
+//                url = url.substring(subChar);
+//                currentType = Type.valueOf(sup);
+//                i = -1;
             } else { // Regular text
                 if (currentType == INPUT || currentType == REGULAR) {
                     currentComponent.append(s);

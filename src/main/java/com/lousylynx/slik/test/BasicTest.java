@@ -5,44 +5,39 @@ import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.route.ICallable;
-import com.lousylynx.slik.route.parser.UrlParser;
 
 public class BasicTest {
 
     public static void main(String[] args) {
         Slik.init(new Slik.EnvironmentBuilder()
                 .setIp("localhost")
-                .setPort(8070)
+                .setPort(80)
                 .build());
 
-        Slik.any("/{test}(/{test})", new ICallable() {
+        Slik.any("$/[{page}]", new ICallable() {
             @Override
             public Response handle(Request request, Response response) {
                 response.setType(ContentType.HTML);
-                response.append("This is a test. Click <a href=\"" + Slik.pathFor("test") + "\">here</a>.");
+                response.append("This is a test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.<br /> You inputted: <br /><ul>");
+
+                for(String page : request.getInput("page")) {
+                    response.append("<li>" + page + "</li>");
+                }
+
+                response.append("</ul>");
+
                 return response;
             }
         }).setName("home");
 
-//        Slik.any("/test", new ICallable() {
+//        Slik.any("/test/test", new ICallable() {
 //            @Override
 //            public Response handle(Request request, Response response) {
 //                response.setType(ContentType.HTML);
-//                response.append("This is another test. Click <a href=\"" + Slik.pathFor("test-2") + "\">here</a>.");
+//                response.append("This is yet another test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.");
 //                return response;
 //            }
 //        }).setName("test");
-
-        Slik.any("/test/test", new ICallable() {
-            @Override
-            public Response handle(Request request, Response response) {
-                response.setType(ContentType.HTML);
-                response.append("This is yet another test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.");
-                return response;
-            }
-        }).setName("test");
-
-        Slik.getLOG().info(UrlParser.parse("/download/{file}.{ext}[(/{file}.{ext})]").asRegular());
 
         Slik.start();
     }

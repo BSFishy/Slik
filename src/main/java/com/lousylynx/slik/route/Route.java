@@ -1,6 +1,7 @@
 package com.lousylynx.slik.route;
 
 import com.lousylynx.slik.common.types.Method;
+import com.lousylynx.slik.route.parser.Url;
 import com.lousylynx.slik.route.parser.UrlParser;
 import lombok.Data;
 import lombok.Getter;
@@ -8,17 +9,16 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Data
 public class Route {
 
-    // RULES:
-    // [X] - input data
-    // (X) - optional data
     @Getter
     private final String path;
     @Getter
-    private final String pathRegex;
+    private final Url url;
     @Getter
     private final Method method;
     @Getter
@@ -31,12 +31,23 @@ public class Route {
 
     public Route(String path, Method method, ICallable call) {
         this.path = path;
-        this.pathRegex = UrlParser.parse(path).asRegular();
+        this.url = UrlParser.parse(path);
         this.method = method;
         this.call = call;
     }
 
     public boolean pathMatches(String path) {
-        return path.matches(pathRegex);
+        if(url.isMatchAll()) {
+            final Pattern pattern = Pattern.compile(url.getRegular());
+            final Matcher matcher = pattern.matcher(path);
+
+            while(matcher.find()){
+                return true;
+            }
+
+            return false;
+        }
+
+        return path.matches(url.getRegular());
     }
 }

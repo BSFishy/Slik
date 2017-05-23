@@ -10,6 +10,8 @@ public class InputComponent extends Component<String> {
 
     @Override
     public String asRegular() {
+        getSuperMost().add(getData());
+
         return "([^.\\/]+)";
     }
 }

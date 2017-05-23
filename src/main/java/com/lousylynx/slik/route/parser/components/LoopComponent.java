@@ -13,6 +13,8 @@ public class LoopComponent extends Component<List<Component>> {
 
     @Override
     public String asRegular() {
+        getSuperMost().positionAdd();
+
         String result = "(";
 
         for(Component child : children) {

@@ -97,8 +97,11 @@ public class Slik {
         try {
             env.setChannel(bootstrap.bind(env.getIp(), env.getPort()).sync());
         } catch (Exception e) {
-            LOG.warn("There was an error starting the webserver.");
-            LOG.log(Level.WARN, e.getMessage(), e.getCause());
+            LOG.error("There was an error starting the webserver.");
+            LOG.log(Level.ERROR, e.getMessage(), e.getCause());
+            LOG.error("Shutting down");
+
+            System.exit(1);
         }
     }
 
@@ -139,7 +142,13 @@ public class Slik {
     }
 
     public static String pathFor(String name) {
-        return router.getRouteByName(name).getPath();
+        try {
+            return router.getRouteByName(name).getPath();
+        }catch(Exception e) {
+            LOG.error("Tried to get an nonexistent route: " + name);
+
+            return "/";
+        }
     }
 
     /**
