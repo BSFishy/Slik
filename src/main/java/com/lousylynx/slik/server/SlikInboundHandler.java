@@ -5,6 +5,7 @@ import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.common.types.Method;
+import com.lousylynx.slik.file.InternalFileReader;
 import com.lousylynx.slik.route.Route;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -58,11 +59,21 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx,
                                 Throwable cause) throws Exception {
-        ctx.writeAndFlush(new DefaultFullHttpResponse(
+        Slik.getLOG().warn("There was an error processing the previous path");
+        Slik.getLOG().warn(cause.getMessage(), cause);
+
+        String text = cause.getMessage();
+
+        FullHttpResponse res = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.INTERNAL_SERVER_ERROR,
-                Unpooled.copiedBuffer(cause.getMessage().getBytes())
-        ));
+                Unpooled.copiedBuffer(text.getBytes())
+        );
+
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, ContentType.HTML.getLiteral());
+        res.headers().set(HttpHeaderNames.CONTENT_LENGTH, text.length());
+
+        ctx.writeAndFlush(res);
     }
 
 
@@ -79,7 +90,7 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void send404NotFound(final ChannelHandlerContext ctx) {
-        String text = "404: Not found";
+        String text = new InternalFileReader("assets/slik/views/404.html").read();
 
         FullHttpResponse res = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,

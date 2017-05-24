@@ -2,6 +2,7 @@ package com.lousylynx.slik.common;
 
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.common.types.Status;
+import com.lousylynx.slik.file.FileReader;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -22,6 +23,10 @@ public class Response {
 
     public void append(String append) {
         this.body += append;
+    }
+
+    public void append(FileReader reader) {
+        this.body += reader.read();
     }
 
     public FullHttpResponse compile() {

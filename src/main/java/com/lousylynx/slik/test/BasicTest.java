@@ -4,6 +4,7 @@ import com.lousylynx.slik.Slik;
 import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
 import com.lousylynx.slik.common.types.ContentType;
+import com.lousylynx.slik.file.InternalFileReader;
 import com.lousylynx.slik.route.ICallable;
 
 public class BasicTest {
@@ -18,16 +19,16 @@ public class BasicTest {
             @Override
             public Response handle(Request request, Response response) {
                 response.setType(ContentType.HTML);
-                response.append("This is a test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.<br /> You inputted: <br /><ul>");
+//                response.append("This is a test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.<br /> You inputted: <br /><ul>");
+//
+////                for(String page : request.getInputList("page")) {
+////                    response.append("<li>" + page + "</li>");
+////                }
+//                response.append("<li>" + request.getInput("page") + "</li>");
+//
+//                response.append("</ul>");
 
-//                for(String page : request.getInputList("page")) {
-//                    response.append("<li>" + page + "</li>");
-//                }
-                response.append("<li>" + request.getInput("page") + "</li>");
-
-                response.append("</ul>");
-
-                Slik.getLOG().info(request.getRoute().getUrl().getRegular());
+                response.append(new InternalFileReader("/assets/slik/views/404.html"));
 
                 return response;
             }
