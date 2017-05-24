@@ -14,15 +14,16 @@ public class BasicTest {
                 .setPort(8070)
                 .build());
 
-        Slik.any("$/[{page}]", new ICallable() {
+        Slik.any("/[{page}]", new ICallable() {
             @Override
             public Response handle(Request request, Response response) {
                 response.setType(ContentType.HTML);
                 response.append("This is a test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.<br /> You inputted: <br /><ul>");
 
-                for(String page : request.getInput("page")) {
-                    response.append("<li>" + page + "</li>");
-                }
+//                for(String page : request.getInputList("page")) {
+//                    response.append("<li>" + page + "</li>");
+//                }
+                response.append("<li>" + request.getInput("page") + "</li>");
 
                 response.append("</ul>");
 

@@ -53,7 +53,13 @@ public class Request {
         }
     }
 
-    public List<String> getInput(String key) {
-        return inputValues.get(key);
+    public String getInput(String key) {
+        //return inputValues.get(key);
+        List<String> values = inputValues.get(key);
+        return values.size() == 1 ? values.get(0) : "";
+    }
+
+    public List<String> getInputList(String key) {
+        return inputValues.containsKey(key) ? inputValues.get(key) : new ArrayList<>();
     }
 }

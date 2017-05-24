@@ -27,10 +27,11 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
         Response res = new Response();
 
         Route r = Slik.getRouter().getRoute(req.getPath());
-        req.setRoute(r);
-        req.setupInputs();
 
         if (r != null) {
+            req.setRoute(r);
+            req.setupInputs();
+
             if (Slik.getEnv().isIncomingMessages())
                 Slik.getLOG().info("Received and handled message: " + request.uri());
 
