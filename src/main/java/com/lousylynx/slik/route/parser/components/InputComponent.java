@@ -12,6 +12,6 @@ public class InputComponent extends Component<String> {
     public String asRegular() {
         getSuperMost().add(getData());
 
-        return "([^.\\/]+)";
+        return "([^\\/]+)";
     }
 }

@@ -27,6 +27,8 @@ public class BasicTest {
 
                 response.append("</ul>");
 
+                Slik.getLOG().info(request.getRoute().getUrl().getRegular());
+
                 return response;
             }
         }).setName("home");

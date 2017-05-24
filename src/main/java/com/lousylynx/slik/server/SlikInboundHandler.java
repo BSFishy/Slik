@@ -3,11 +3,14 @@ package com.lousylynx.slik.server;
 import com.lousylynx.slik.Slik;
 import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
+import com.lousylynx.slik.common.types.ContentType;
+import com.lousylynx.slik.common.types.Method;
 import com.lousylynx.slik.route.Route;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.*;
+import io.netty.util.CharsetUtil;
 
 public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
 
@@ -26,7 +29,7 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
         Request req = new Request(request);
         Response res = new Response();
 
-        Route r = Slik.getRouter().getRoute(req.getPath());
+        Route r = Slik.getRouter().getRoute(req.getPath(), Method.valueOf(request.method()));
 
         if (r != null) {
             req.setRoute(r);
@@ -64,17 +67,29 @@ public class SlikInboundHandler extends ChannelInboundHandlerAdapter {
 
 
     private void send100Continue(final ChannelHandlerContext ctx) {
-        ctx.write(new DefaultFullHttpResponse(
+        FullHttpResponse res = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.CONTINUE
-        ));
+        );
+
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, ContentType.HTML.getLiteral());
+        //res.headers().set(HttpHeaderNames.CONTENT_LENGTH, text.length());
+
+        ctx.write(res);
     }
 
     private void send404NotFound(final ChannelHandlerContext ctx) {
-        ctx.write(new DefaultFullHttpResponse(
+        String text = "404: Not found";
+
+        FullHttpResponse res = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.NOT_FOUND,
-                Unpooled.copiedBuffer("404: Not found".getBytes())
-        ));
+                Unpooled.copiedBuffer(text, CharsetUtil.UTF_8)
+        );
+
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, ContentType.HTML.getLiteral());
+        res.headers().set(HttpHeaderNames.CONTENT_LENGTH, text.length());
+
+        ctx.write(res);
     }
 }

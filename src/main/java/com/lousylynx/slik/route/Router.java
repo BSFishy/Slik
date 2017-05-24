@@ -32,9 +32,9 @@ public class Router {
         return result;
     }
 
-    public Route getRoute(String path) {
+    public Route getRoute(String path, Method method) {
         for (Route r : routes) {
-            if (r.pathMatches(path)) {
+            if (r.pathMatches(path) && r.getMethod().equals(method)) {
                 return r;
             }
         }

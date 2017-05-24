@@ -42,7 +42,7 @@ public class Request {
         while(matcher.find()) {
             for(int i = 1; i < matcher.groupCount(); i++) {
                 String key = route.getUrl().getName(i);
-                String value = matcher.group(i);
+                String value = matcher.group(i + 1);
 
                 if(value != null) {
                     List<String> values = inputValues.containsKey(key) ? inputValues.get(key) : new ArrayList<>();
@@ -56,7 +56,7 @@ public class Request {
     public String getInput(String key) {
         //return inputValues.get(key);
         List<String> values = inputValues.get(key);
-        return values.size() == 1 ? values.get(0) : "";
+        return values != null ? (values.size() == 1 ? values.get(0) : "") : "";
     }
 
     public List<String> getInputList(String key) {

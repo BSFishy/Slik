@@ -113,7 +113,11 @@ public class UrlParser {
 //                i = -1;
             } else { // Regular text
                 if (currentType == INPUT || currentType == REGULAR) {
-                    currentComponent.append(s);
+                    if(s.equals(".")){
+                        currentComponent.append("\\.");
+                    } else {
+                        currentComponent.append(s);
+                    }
                 } else {
                     currentComponent = new StringComponent(sup, s);
                     currentType = REGULAR;

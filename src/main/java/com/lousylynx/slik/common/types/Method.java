@@ -36,6 +36,6 @@ public enum Method {
     }
 
     public boolean equals(Method o) {
-        return o.getName().equals(name) && o.getLiteral().equals(literal);
+        return (o.getName().equals(name) && o.getLiteral().equals(literal)) || this == Method.ANY;
     }
 }
