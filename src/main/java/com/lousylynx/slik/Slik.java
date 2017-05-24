@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.lousylynx.slik.common.types.Method;
 import com.lousylynx.slik.environment.Environment;
 import com.lousylynx.slik.event.ShutdownEvent;
+import com.lousylynx.slik.route.Group;
 import com.lousylynx.slik.route.ICallable;
 import com.lousylynx.slik.route.Route;
 import com.lousylynx.slik.route.Router;
@@ -139,6 +140,11 @@ public class Slik {
 
     public static Route any(String path, ICallable call) {
         return router.addRoute(path, Method.ANY, call);
+    }
+
+    public static void group(String prefix, Group group) {
+        group.setPrefix(prefix);
+        group.setup();
     }
 
     public static String pathFor(String name) {

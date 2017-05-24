@@ -5,6 +5,7 @@ import com.lousylynx.slik.common.Request;
 import com.lousylynx.slik.common.Response;
 import com.lousylynx.slik.common.types.ContentType;
 import com.lousylynx.slik.file.InternalFileReader;
+import com.lousylynx.slik.route.Group;
 import com.lousylynx.slik.route.ICallable;
 
 public class BasicTest {
@@ -33,6 +34,31 @@ public class BasicTest {
                 return response;
             }
         }).setName("home");
+
+        Slik.group("/test", new Group() {
+            @Override
+            public void setup() {
+                this.any("/test", new ICallable() {
+                    @Override
+                    public Response handle(Request request, Response response) {
+                        response.setType(ContentType.HTML);
+                        response.append("This is test");
+
+                        return response;
+                    }
+                }).setName("test");
+
+                any("/example", new ICallable() {
+                    @Override
+                    public Response handle(Request request, Response response) {
+                        response.setType(ContentType.HTML);
+                        response.append("This is example");
+
+                        return response;
+                    }
+                }).setName("example");
+            }
+        });
 
 //        Slik.any("/test/test", new ICallable() {
 //            @Override

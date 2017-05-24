@@ -24,7 +24,6 @@ public class Route {
     @Getter
     private final ICallable call;
     @Getter
-    @Setter
     private String name = "";
 
     private final List<String> allowed = new ArrayList<>();
@@ -49,5 +48,10 @@ public class Route {
         }
 
         return path.matches(url.getRegular());
+    }
+
+    public Route setName(String name) {
+        this.name = name;
+        return this;
     }
 }
