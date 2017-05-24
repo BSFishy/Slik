@@ -11,7 +11,7 @@ public class BasicTest {
     public static void main(String[] args) {
         Slik.init(new Slik.EnvironmentBuilder()
                 .setIp("localhost")
-                .setPort(80)
+                .setPort(8070)
                 .build());
 
         Slik.any("$/[{page}]", new ICallable() {

@@ -44,9 +44,11 @@ public class Request {
                 String key = route.getUrl().getName(i);
                 String value = matcher.group(i);
 
-                List<String> values = inputValues.containsKey(key) ? inputValues.get(key) : new ArrayList<>();
-                values.add(value);
-                inputValues.put(key, values);
+                if(value != null) {
+                    List<String> values = inputValues.containsKey(key) ? inputValues.get(key) : new ArrayList<>();
+                    values.add(value);
+                    inputValues.put(key, values);
+                }
             }
         }
     }
