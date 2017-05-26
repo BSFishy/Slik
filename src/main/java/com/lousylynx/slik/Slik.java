@@ -21,6 +21,8 @@ import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Slik {
 
@@ -148,8 +150,12 @@ public class Slik {
     }
 
     public static String pathFor(String name) {
+        return pathFor(name, new HashMap<>());
+    }
+
+    public static String pathFor(String name, Map<String, String> args) {
         try {
-            return router.getRouteByName(name).getPath();
+            return router.getPath(name, args);
         }catch(Exception e) {
             LOG.error("Tried to get an nonexistent route: " + name);
 

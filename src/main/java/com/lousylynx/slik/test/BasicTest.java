@@ -8,6 +8,9 @@ import com.lousylynx.slik.file.InternalFileReader;
 import com.lousylynx.slik.route.Group;
 import com.lousylynx.slik.route.ICallable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BasicTest {
 
     public static void main(String[] args) {
@@ -52,22 +55,16 @@ public class BasicTest {
                     @Override
                     public Response handle(Request request, Response response) {
                         response.setType(ContentType.HTML);
-                        response.append("This is example");
+                        
+                        Map<String, String> data = new HashMap<>();
+                        data.put("page", "test");
+                        response.append("This is example. <a href=\"" + Slik.pathFor("home", data) + "\">test</a>");
 
                         return response;
                     }
                 }).setName("example");
             }
         });
-
-//        Slik.any("/test/test", new ICallable() {
-//            @Override
-//            public Response handle(Request request, Response response) {
-//                response.setType(ContentType.HTML);
-//                response.append("This is yet another test. Click <a href=\"" + Slik.pathFor("home") + "\">here</a>.");
-//                return response;
-//            }
-//        }).setName("test");
 
         Slik.start();
     }

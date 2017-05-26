@@ -5,6 +5,9 @@ import com.lousylynx.slik.common.types.Method;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Router {
 
@@ -50,5 +53,9 @@ public class Router {
         }
 
         return null;
+    }
+
+    public String getPath(String name, Map<String, String> args) {
+        return getRouteByName(name).getUrl().substitute(args);
     }
 }

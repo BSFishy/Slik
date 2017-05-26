@@ -1,6 +1,7 @@
 package com.lousylynx.slik.route.parser;
 
-import com.lousylynx.slik.route.parser.components.Component;
+import com.lousylynx.slik.Slik;
+import com.lousylynx.slik.route.parser.components.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,5 +64,37 @@ public class Url extends Component<List<Component>> {
         }
 
         return "";
+    }
+
+    public String substitute(Map<String, String> values) {
+        return recursiveSubstitute(children, values, false);
+    }
+
+    private String recursiveSubstitute(List<Component> components, Map<String, String> values, boolean optional) {
+        String result = "";
+
+        for(Component child : components) {
+            if(child instanceof StringComponent) {
+                result += ((StringComponent) child).getData();
+            } else if(child instanceof SeparatorComponent) {
+                result += "/";
+            } else if(child instanceof OptionalComponent) {
+                String optResult = recursiveSubstitute(child.getChildren(), values, true);
+
+                if(!optResult.isEmpty()) {
+                    result += optResult;
+                }
+            } else if(child instanceof InputComponent) {
+                if(!values.containsKey(((InputComponent) child).getData()) && optional) {
+                    return "";
+                } else if(values.containsKey(((InputComponent) child).getData())) {
+                    result += values.get(((InputComponent) child).getData());
+                } else {
+                    Slik.getLOG().warn("There was an issue getting the following input: \"" + ((InputComponent) child).getData() + "\". Ignoring");
+                }
+            }
+        }
+
+        return result;
     }
 }
